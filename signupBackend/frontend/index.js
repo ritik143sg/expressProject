@@ -1,5 +1,6 @@
 const handleSubmit = async (event) => {
   event.preventDefault();
+  console.log(event);
 
   console.log(event.target);
 
@@ -10,7 +11,9 @@ const handleSubmit = async (event) => {
   };
 
   try {
+    console.log("User Post Request");
     const res = await axios.post("http://localhost:4000/user/signup/add", data);
+    console.log(res);
     alert(res.data.msg);
     console.log(res);
   } catch (error) {
