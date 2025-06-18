@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css" />
+    <title>Frontend login app</title>
+  </head>
+  <body>
+    <h1>Daily Expenses</h1>
+    <br /><br />
+    <form action="" onsubmit="handleSubmit(event)">
+      <label for="amount">Amount: </label>
+      <input type="number" name="amount" id="amount" required />
+      <br /><br />
+      <label for="description">Description: </label>
+      <input type="text" name="description" id="description" required />
+      <br /><br />
+      <label for="category">Category: </label>
+      <select name="category" id="category" required>
+        <option value="food">Food</option>
+        <option value="petrol">Petrol</option>
+        <option value="salary">Salary</option>
+        <option value="health">Health</option>
+        <option value="cloths">Cloths</option>
+      </select>
+      <br /><br />
+      <button>Submit</button>
+      <br /><br />
+      <ul></ul>
+    </form>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="expense.js"></script>
+</html>

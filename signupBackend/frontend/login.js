@@ -10,6 +10,7 @@ const handleSubmit = async (event) => {
     const res = await axios.post("http://localhost:4000/user/login", data);
 
     alert(res.data.msg);
+    window.location.href = "./expense.html";
   } catch (error) {
     alert(error.response.data.msg);
     console.log(error.response.data.msg);

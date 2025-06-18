@@ -2,6 +2,7 @@ const express = require("express");
 const sequelize = require("./utils/DB/DbConnect");
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
+const expenseRoute = require("./routes/expenseRoute");
 const app = express();
 
 app.use(express.json());
@@ -10,6 +11,7 @@ app.use(cors());
 const PORT = 4000;
 
 app.use("/user", userRoute);
+app.use("/expense", expenseRoute);
 
 sequelize
   .sync({ force: false })
