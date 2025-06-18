@@ -25,4 +25,25 @@ const addUser = async (req, res) => {
   }
 };
 
-module.exports = { addUser };
+const logUser = async (req, res) => {
+  try {
+    const data = req.body;
+
+    const checkUser = await User.findOne({
+      where: {
+        email: data.email,
+      },
+    });
+    if (!checkUser) {
+      res.status(500).json({ msg: "User Not Exist" });
+    } else {
+      if (data.password != checkUser.password) {
+        res.status(500).json({ msg: "Wrong Password" });
+      } else res.status(201).json({ msg: "User logged" });
+    }
+  } catch (error) {
+    res.status(500).json({ msg: "User add failed", error: error.message });
+  }
+};
+
+module.exports = { addUser, logUser };

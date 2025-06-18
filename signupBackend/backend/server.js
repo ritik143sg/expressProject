@@ -9,7 +9,7 @@ app.use(cors());
 
 const PORT = 4000;
 
-app.use("/user/signup", userRoute);
+app.use("/user", userRoute);
 
 sequelize
   .sync({ force: false })

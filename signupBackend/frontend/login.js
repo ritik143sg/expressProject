@@ -1,22 +1,20 @@
 const handleSubmit = async (event) => {
   event.preventDefault();
 
-  console.log(event.target);
-
   const data = {
-    username: event.target.username.value,
     email: event.target.email.value,
     password: event.target.password.value,
   };
 
   try {
-    const res = await axios.post("http://localhost:4000/user/signup/add", data);
+    const res = await axios.post("http://localhost:4000/user/login", data);
+
     alert(res.data.msg);
-    console.log(res);
   } catch (error) {
-    console.log(error);
+    alert(error.response.data.msg);
+    console.log(error.response.data.msg);
   }
-  event.target.username.value = "";
+
   event.target.email.value = "";
   event.target.password.value = "";
 };
