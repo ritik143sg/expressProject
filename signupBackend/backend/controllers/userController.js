@@ -1,8 +1,14 @@
+const { comparePassword } = require("../middleWare/bycrypt");
+const { encryptPassword } = require("../middleWare/bycrypt");
 const User = require("../models/userModel");
 
 const addUser = async (req, res) => {
   try {
     const data = req.body;
+    const pass = await encryptPassword(data.password);
+    console.log(pass);
+
+    console.log(data);
 
     const checkUser = await User.findOne({
       where: {
@@ -15,7 +21,7 @@ const addUser = async (req, res) => {
       const user = await User.create({
         username: data.username,
         email: data.email,
-        password: data.password,
+        password: pass,
       });
 
       res.status(201).json({ msg: "User added ", user: user });
@@ -36,9 +42,9 @@ const logUser = async (req, res) => {
     if (!checkUser) {
       res.status(404).json({ msg: "User Not Exist " });
     } else {
-      if (data.password != checkUser.password) {
+      if (!(await comparePassword(data.password, checkUser.password))) {
         res.status(401).json({ msg: "Wrong Password - User Not Authorised " });
-      } else res.status(201).json({ msg: "User login sucessful" });
+      } else res.status(201).json({ msg: "User login successful" });
     }
   } catch (error) {
     res.status(500).json({ msg: "User adding failed", error: error.message });
