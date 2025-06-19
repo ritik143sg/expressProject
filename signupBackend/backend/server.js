@@ -5,6 +5,8 @@ const userRoute = require("./routes/userRoute");
 const expenseRoute = require("./routes/expenseRoute");
 const app = express();
 
+require("./models");
+
 app.use(express.json());
 app.use(cors());
 

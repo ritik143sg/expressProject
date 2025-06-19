@@ -12,7 +12,12 @@ const handleSubmit = async (event) => {
   };
 
   try {
-    const res = await axios.post("http://localhost:4000/expense/add", data);
+    const token = JSON.parse(localStorage.getItem("token"));
+    const res = await axios.post("http://localhost:4000/expense/add", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log(res);
     inintialize();
   } catch (error) {
@@ -20,7 +25,6 @@ const handleSubmit = async (event) => {
   }
   event.target.amount.value = "";
   event.target.description.value = "";
-  event.target.category.value = "";
 };
 
 async function display(item) {
@@ -35,8 +39,12 @@ async function display(item) {
 
   try {
     del.addEventListener("click", async () => {
-      await axios.delete(`http://localhost:4000/expense/${item.id}`);
-      console.log("ggggggggggggg");
+      const token = JSON.parse(localStorage.getItem("token"));
+      await axios.delete(`http://localhost:4000/expense/delete/${item.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       inintialize();
     });
   } catch (error) {
@@ -52,7 +60,14 @@ async function inintialize() {
   ul.innerHTML = "";
 
   try {
-    const expenses = await axios.get("http://localhost:4000/expense");
+    const token = JSON.parse(localStorage.getItem("token"));
+
+    const expenses = await axios.get("http://localhost:4000/expense", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     console.log(expenses);
     const items = expenses.data.expense;
 

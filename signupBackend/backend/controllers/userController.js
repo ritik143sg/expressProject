@@ -1,3 +1,4 @@
+const { genTokent } = require("../middleWare/authentication");
 const { comparePassword } = require("../middleWare/bycrypt");
 const { encryptPassword } = require("../middleWare/bycrypt");
 const User = require("../models/userModel");
@@ -44,10 +45,13 @@ const logUser = async (req, res) => {
     } else {
       if (!(await comparePassword(data.password, checkUser.password))) {
         res.status(401).json({ msg: "Wrong Password - User Not Authorised " });
-      } else res.status(201).json({ msg: "User login successful" });
+      } else {
+        const token = genTokent(checkUser);
+        res.status(201).json({ msg: "User login successful", token: token });
+      }
     }
   } catch (error) {
-    res.status(500).json({ msg: "User adding failed", error: error.message });
+    res.status(500).json({ msg: "User Login failed", error: error.message });
   }
 };
 
