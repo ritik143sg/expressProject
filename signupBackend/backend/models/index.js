@@ -1,4 +1,5 @@
 const Expense = require("./expenseModel");
+const Order = require("./orderModel");
 const User = require("./userModel");
 
 //relation
@@ -6,4 +7,9 @@ const User = require("./userModel");
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
-module.exports = { User, Expense };
+//
+
+User.hasOne(Order);
+Order.belongsTo(User);
+
+module.exports = { User, Expense, Order };

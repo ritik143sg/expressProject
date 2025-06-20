@@ -3,7 +3,7 @@ const sequelize = require("./utils/DB/DbConnect");
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
 const expenseRoute = require("./routes/expenseRoute");
-const paymentRouter = require("./routes/paymentRoute");
+const { paymentRoute } = require("./routes/paymentRoute");
 const app = express();
 
 require("./models");
@@ -15,6 +15,7 @@ const PORT = 4000;
 
 app.use("/user", userRoute);
 app.use("/expense", expenseRoute);
+app.use("/payment", paymentRoute);
 
 sequelize
   .sync({ force: false })

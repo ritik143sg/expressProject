@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const secretKey = "abc123";
 
 const genTokent = (req) => {
-  console.log(req);
   const token = jwt.sign(
     {
       id: req.id,
@@ -35,7 +34,7 @@ const authenticate = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, secretKey);
     req.user = decoded;
-    console.log("decode data", decoded);
+
     next();
   } catch (err) {
     return res.status(403).json({ message: "Invalid token" });

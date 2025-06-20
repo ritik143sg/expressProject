@@ -16,6 +16,7 @@ const handleSubmit = async (event) => {
     console.log(res);
     alert(res.data.msg);
     console.log(res);
+    window.location.href = "./login.html";
   } catch (error) {
     console.log(error);
   }

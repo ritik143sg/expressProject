@@ -7,9 +7,9 @@ const addUser = async (req, res) => {
   try {
     const data = req.body;
     const pass = await encryptPassword(data.password);
-    console.log(pass);
+    // console.log(pass);
 
-    console.log(data);
+    // console.log(data);
 
     const checkUser = await User.findOne({
       where: {

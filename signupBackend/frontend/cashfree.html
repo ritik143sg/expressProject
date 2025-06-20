@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+    <title>Payment Button</title>
+  </head>
+  <body>
+    <h1>Payment</h1>
+    <form onsubmit="handlePayment(event)">
+      <button
+        id="payBtn"
+        style="padding: 5px; border-radius: 5px; border-color: aqua"
+      >
+        Pay Now
+      </button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const handlePayment = async (event) => {
+        event.preventDefault();
+        const button = document.getElementById("payBtn");
+        button.disabled = true;
+        button.innerText = "Processing...";
+
+        console.log("Cashfree:", typeof Cashfree);
+
+        try {
+          const res = await axios.get(
+            "http://localhost:4000/payment/sessionId"
+          );
+          const id = res.data.id;
+          console.log(id);
+
+          const cashfree = new Cashfree();
+          cashfree.checkout({
+            payment_session_id: id,
+          });
+          console.log("Payment success");
+        } catch (error) {
+          console.log("Payment error:", error);
+          alert("Failed to initiate payment");
+        } finally {
+          button.disabled = false;
+          button.innerText = "Pay Now";
+        }
+      };
+    </script>
+  </body>
+</html>

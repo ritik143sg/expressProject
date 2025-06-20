@@ -3,9 +3,9 @@ const Expense = require("../models/expenseModel");
 const addExpense = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
+    // console.log(data);
 
-    console.log("data", data);
+    // console.log("data", data);
     const expense = await Expense.create({
       amount: data.amount,
       description: data.description,
@@ -21,7 +21,7 @@ const addExpense = async (req, res) => {
 };
 const getAllExpense = async (req, res) => {
   const user = req.user;
-  console.log(user);
+  //console.log(user);
   try {
     const expenses = await Expense.findAll({
       where: {

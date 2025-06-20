@@ -27,9 +27,42 @@
       <br /><br />
       <button>Submit</button>
       <br /><br />
+      <button
+        onclick="initiatePayment()"
+        style="background-color: rgb(236, 101, 124)"
+      >
+        Buy Premium
+      </button>
+      <br /><br />
       <ul></ul>
     </form>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+  <script>
+    const initiatePayment = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("token"));
+        const res = await axios.get("http://localhost:4000/payment/sessionId", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const paymentSessionId = res.data.id;
+        console.log(paymentSessionId);
+
+        const cashfree = await Cashfree({
+          mode: "sandbox",
+        });
+
+        await cashfree.checkout({
+          paymentSessionId,
+          redirectTarget: "_self",
+        });
+      } catch (err) {
+        console.error("Cashfree checkout error:", err);
+      }
+    };
+  </script>
   <script src="expense.js"></script>
 </html>
