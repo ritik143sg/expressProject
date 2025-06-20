@@ -27,6 +27,18 @@ const handleSubmit = async (event) => {
   event.target.description.value = "";
 };
 
+async function display2(item) {
+  const leaderBoard = document.getElementById("leaderBoard");
+  const ul = document.querySelector("#leaderBoardList");
+
+  const li = document.createElement("li");
+
+  li.innerText = `UserId: ${item.id}, Name: ${item.name}, TotalAmount: ${item.amount}`;
+
+  ul.appendChild(li);
+  leaderBoard.appendChild(ul);
+}
+
 async function display(item) {
   const ul = document.querySelector("ul");
 
@@ -88,6 +100,35 @@ async function inintialize() {
           alert("Already A Premium User");
         });
         form.appendChild(premium);
+
+        const leaderBoard = document.getElementById("leaderBoard");
+        console.log(leaderBoard);
+
+        const leaderBoardButton = document.createElement("button");
+        leaderBoardButton.innerText = "Leader Board";
+        leaderBoard.appendChild(leaderBoardButton);
+
+        leaderBoardButton.addEventListener("click", async () => {
+          const expenses = await axios.get(
+            "http://localhost:4000/premiumFeature",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          console.log(expenses);
+          const items = expenses.data.data;
+          console.log(items);
+
+          const ul = document.querySelector("#leaderBoardList");
+          ul.innerHTML = "";
+
+          items.map((item) => {
+            display2(item);
+          });
+        });
       }
     }
 
