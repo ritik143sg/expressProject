@@ -59,8 +59,37 @@ async function inintialize() {
   const ul = document.querySelector("ul");
   ul.innerHTML = "";
 
+  const premiumButton = document.getElementById("premium");
+
   try {
     const token = JSON.parse(localStorage.getItem("token"));
+
+    const result = await axios.get("http://localhost:4000/order", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const status = result.data.order.OrderStatus;
+
+    console.log(status);
+
+    if (status == "Success") {
+      const form = document.querySelector("form");
+
+      if (premiumButton) {
+        form.removeChild(premiumButton);
+
+        const premium = document.createElement("button");
+        premium.style.backgroundColor = "rgb(236, 101, 124)";
+        premium.innerText = "You are a Premium User";
+        premium.id = "Premium";
+        premium.addEventListener("click", () => {
+          alert("Already A Premium User");
+        });
+        form.appendChild(premium);
+      }
+    }
 
     const expenses = await axios.get("http://localhost:4000/expense", {
       headers: {
