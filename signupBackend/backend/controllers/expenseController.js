@@ -1,17 +1,27 @@
+const { User } = require("../models");
 const Expense = require("../models/expenseModel");
 
 const addExpense = async (req, res) => {
   try {
     const data = req.body;
-    // console.log(data);
 
-    // console.log("data", data);
     const expense = await Expense.create({
       amount: data.amount,
       description: data.description,
       category: data.category,
       UserId: req.user.id,
     });
+    const cost = await User.findByPk(req.user.id);
+    console.log(typeof data.amount);
+    await User.update(
+      { totalCost: cost.totalCost + Number(data.amount) },
+      {
+        where: {
+          id: req.user.id,
+        },
+      }
+    );
+
     res.status(201).json({ msg: "expense Added", expense: expense });
   } catch (error) {
     res
@@ -49,6 +59,15 @@ const delExpense = async (req, res) => {
           id: id,
         },
       });
+      const cost = await User.findByPk(req.user.id);
+      await User.update(
+        { totalCost: cost.totalCost - expense.amount },
+        {
+          where: {
+            id: req.user.id,
+          },
+        }
+      );
       res.status(201).json({ msg: "expense deleted", expense: expense });
     } else res.status(404).json({ msg: "User Not Found" });
   } catch (error) {

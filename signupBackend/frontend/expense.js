@@ -33,9 +33,7 @@ async function display2(item) {
 
   const li = document.createElement("li");
 
-  let cost = item.totalCost === null ? 0 : item.totalCost;
-
-  li.innerText = `UserId: ${item.is}, Name: ${item.username}, TotalAmount: ${cost}`;
+  li.innerText = `UserId: ${item.id}, Name: ${item.username}, TotalAmount: ${item.totalCost}`;
 
   ul.appendChild(li);
   leaderBoard.appendChild(ul);
