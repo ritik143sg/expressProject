@@ -58,4 +58,39 @@ const logUser = async (req, res) => {
   }
 };
 
-module.exports = { addUser, logUser };
+const setPassword = async (req, res) => {
+  const transaction = await sequelize.transaction();
+  try {
+    const data = req.body;
+    console.log("data----------------->", data);
+    const pass = await encryptPassword(data.password);
+
+    const checkUser = await User.findOne({
+      where: {
+        email: data.email,
+      },
+    });
+    if (!checkUser) {
+      res.status(500).json({ msg: "User not Exist " });
+    } else {
+      const user = await User.update(
+        {
+          password: pass,
+        },
+        {
+          where: {
+            email: checkUser.email,
+          },
+          transaction,
+        }
+      );
+      transaction.commit();
+      res.status(201).json({ msg: "password set ", user: user });
+    }
+  } catch (error) {
+    transaction.rollback();
+    res.status(500).json({ msg: "password set failed ", error: error.message });
+  }
+};
+
+module.exports = { addUser, logUser, setPassword };

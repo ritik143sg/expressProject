@@ -1,17 +1,27 @@
+const { v4: uuidv4 } = require("uuid");
+const path = require("path");
+
 const { User } = require("../models");
 const SibApiV3Sdk = require("sib-api-v3-sdk");
+const ForgotPasswordRequest = require("../models/ForgotPasswordRequestsModel");
 
 // Step 1: Configure Brevo API key
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications["api-key"];
 apiKey.apiKey =
-  "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";
+  "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";
 
 // Step 2: Define controller function
 const getPassword = async (req, res) => {
   const user = req.body;
 
   try {
+    const uid = uuidv4();
+    const reset = await ForgotPasswordRequest.create({
+      id: uid,
+      isActive: true,
+    });
+
     // Step 3: Instantiate the API
     const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
@@ -37,7 +47,7 @@ const getPassword = async (req, res) => {
       htmlContent: `
         <html>
           <body>
-            <h1>Hello, ${user.email},GET Ready</h1>
+            <h1>Hello, ${user.email},GET Ready,"http://localhost:4000/password/resetpassword/${uid}"</h1>
             <p>This is a test transactional email sent via the Brevo API.</p>
           </body>
         </html>
@@ -53,4 +63,20 @@ const getPassword = async (req, res) => {
   }
 };
 
-module.exports = getPassword;
+const setPassword = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const reset = await ForgotPasswordRequest.findByPk(id);
+    console.log(reset);
+
+    if (reset && reset.isActive == true) {
+      res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+    }
+    console.log("9999999999999999999999");
+  } catch (error) {
+    res.json({ error: error });
+  }
+};
+
+module.exports = { getPassword, setPassword };
