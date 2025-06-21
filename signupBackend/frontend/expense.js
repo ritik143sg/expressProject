@@ -33,7 +33,9 @@ async function display2(item) {
 
   const li = document.createElement("li");
 
-  li.innerText = `UserId: ${item.id}, Name: ${item.name}, TotalAmount: ${item.amount}`;
+  let cost = item.totalCost === null ? 0 : item.totalCost;
+
+  li.innerText = `UserId: ${item.is}, Name: ${item.username}, TotalAmount: ${cost}`;
 
   ul.appendChild(li);
   leaderBoard.appendChild(ul);
@@ -82,53 +84,55 @@ async function inintialize() {
       },
     });
 
-    const status = result.data.order.OrderStatus;
+    if (result.data.order) {
+      const status = result.data.order.OrderStatus;
 
-    console.log(status);
+      console.log(status);
 
-    if (status == "Success") {
-      const form = document.querySelector("form");
+      if (status == "Success") {
+        const form = document.querySelector("form");
 
-      if (premiumButton) {
-        form.removeChild(premiumButton);
+        if (premiumButton) {
+          form.removeChild(premiumButton);
 
-        const premium = document.createElement("button");
-        premium.style.backgroundColor = "rgb(236, 101, 124)";
-        premium.innerText = "You are a Premium User";
-        premium.id = "Premium";
-        premium.addEventListener("click", () => {
-          alert("Already A Premium User");
-        });
-        form.appendChild(premium);
-
-        const leaderBoard = document.getElementById("leaderBoard");
-        console.log(leaderBoard);
-
-        const leaderBoardButton = document.createElement("button");
-        leaderBoardButton.innerText = "Leader Board";
-        leaderBoard.appendChild(leaderBoardButton);
-
-        leaderBoardButton.addEventListener("click", async () => {
-          const expenses = await axios.get(
-            "http://localhost:4000/premiumFeature",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          console.log(expenses);
-          const items = expenses.data.data;
-          console.log(items);
-
-          const ul = document.querySelector("#leaderBoardList");
-          ul.innerHTML = "";
-
-          items.map((item) => {
-            display2(item);
+          const premium = document.createElement("button");
+          premium.style.backgroundColor = "rgb(236, 101, 124)";
+          premium.innerText = "You are a Premium User";
+          premium.id = "Premium";
+          premium.addEventListener("click", () => {
+            alert("Already A Premium User");
           });
-        });
+          form.appendChild(premium);
+
+          const leaderBoard = document.getElementById("leaderBoard");
+          console.log(leaderBoard);
+
+          const leaderBoardButton = document.createElement("button");
+          leaderBoardButton.innerText = "Leader Board";
+          leaderBoard.appendChild(leaderBoardButton);
+
+          leaderBoardButton.addEventListener("click", async () => {
+            const expenses = await axios.get(
+              "http://localhost:4000/premiumFeature",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            console.log(expenses);
+            const items = expenses.data.data;
+            console.log(items);
+
+            const ul = document.querySelector("#leaderBoardList");
+            ul.innerHTML = "";
+
+            items.map((item) => {
+              display2(item);
+            });
+          });
+        }
       }
     }
 

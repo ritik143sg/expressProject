@@ -9,6 +9,12 @@ const getSesssionId = async (req, res) => {
   const user = req.user;
   //console.log(user);
   try {
+    const del = await Order.destroy({
+      where: {
+        UserId: user.id,
+      },
+    });
+
     const orderID = "ORDER_" + Date.now();
     const id = await createOrder(
       orderID,
