@@ -2,14 +2,13 @@ const { genTokent } = require("../middleWare/authentication");
 const { comparePassword } = require("../middleWare/bycrypt");
 const { encryptPassword } = require("../middleWare/bycrypt");
 const User = require("../models/userModel");
+const sequelize = require("../utils/DB/DbConnect");
 
 const addUser = async (req, res) => {
+  const transaction = await sequelize.transaction();
   try {
     const data = req.body;
     const pass = await encryptPassword(data.password);
-    // console.log(pass);
-
-    // console.log(data);
 
     const checkUser = await User.findOne({
       where: {
@@ -19,15 +18,19 @@ const addUser = async (req, res) => {
     if (checkUser) {
       res.status(500).json({ msg: "User Already Exist " });
     } else {
-      const user = await User.create({
-        username: data.username,
-        email: data.email,
-        password: pass,
-      });
-
+      const user = await User.create(
+        {
+          username: data.username,
+          email: data.email,
+          password: pass,
+        },
+        { transaction }
+      );
+      transaction.commit();
       res.status(201).json({ msg: "User added ", user: user });
     }
   } catch (error) {
+    transaction.rollback();
     res.status(500).json({ msg: "User add failed ", error: error.message });
   }
 };

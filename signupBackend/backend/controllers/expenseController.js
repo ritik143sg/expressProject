@@ -1,16 +1,21 @@
 const { User } = require("../models");
 const Expense = require("../models/expenseModel");
+const sequelize = require("../utils/DB/DbConnect");
 
 const addExpense = async (req, res) => {
+  const transaction = await sequelize.transaction();
   try {
     const data = req.body;
 
-    const expense = await Expense.create({
-      amount: data.amount,
-      description: data.description,
-      category: data.category,
-      UserId: req.user.id,
-    });
+    const expense = await Expense.create(
+      {
+        amount: data.amount,
+        description: data.description,
+        category: data.category,
+        UserId: req.user.id,
+      },
+      { transaction }
+    );
     const cost = await User.findByPk(req.user.id);
     console.log(typeof data.amount);
     await User.update(
@@ -19,11 +24,13 @@ const addExpense = async (req, res) => {
         where: {
           id: req.user.id,
         },
+        transaction,
       }
     );
-
+    (await transaction).commit();
     res.status(201).json({ msg: "expense Added", expense: expense });
   } catch (error) {
+    (await transaction).rollback();
     res
       .status(500)
       .json({ msg: "expense Adding failed", error: error.message });
@@ -49,6 +56,7 @@ const getAllExpense = async (req, res) => {
 
 const delExpense = async (req, res) => {
   const data = req.user;
+  const transaction = await sequelize.transaction();
   try {
     const id = req.params.id;
     const expense = await Expense.findByPk(id);
@@ -58,6 +66,7 @@ const delExpense = async (req, res) => {
         where: {
           id: id,
         },
+        transaction,
       });
       const cost = await User.findByPk(req.user.id);
       await User.update(
@@ -66,11 +75,14 @@ const delExpense = async (req, res) => {
           where: {
             id: req.user.id,
           },
+          transaction,
         }
       );
+      (await transaction).commit();
       res.status(201).json({ msg: "expense deleted", expense: expense });
     } else res.status(404).json({ msg: "User Not Found" });
   } catch (error) {
+    (await transaction).rollback();
     res
       .status(500)
       .json({ msg: "expense deletion failed", error: error.message });
