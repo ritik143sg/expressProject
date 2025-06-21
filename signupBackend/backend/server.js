@@ -6,6 +6,7 @@ const expenseRoute = require("./routes/expenseRoute");
 const { paymentRoute } = require("./routes/paymentRoute");
 const { orderRoute } = require("./routes/orderRoute");
 const premiumRoute = require("./routes/premiumFeature");
+const passwordRoute = require("./routes/passwordRoute");
 const app = express();
 
 require("./models");
@@ -20,6 +21,7 @@ app.use("/expense", expenseRoute);
 app.use("/payment", paymentRoute);
 app.use("/order", orderRoute);
 app.use("/premiumFeature", premiumRoute);
+app.use("/password", passwordRoute);
 
 sequelize
   .sync({ force: false })
