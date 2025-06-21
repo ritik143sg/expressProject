@@ -4,12 +4,13 @@ const path = require("path");
 const { User } = require("../models");
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 const ForgotPasswordRequest = require("../models/ForgotPasswordRequestsModel");
+const { where } = require("sequelize");
 
 // Step 1: Configure Brevo API key
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications["api-key"];
 apiKey.apiKey =
-  "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";
+  "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";
 
 // Step 2: Define controller function
 const getPassword = async (req, res) => {
@@ -72,8 +73,14 @@ const setPassword = async (req, res) => {
 
     if (reset && reset.isActive == true) {
       res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+
+      await ForgotPasswordRequest.update(
+        { isActive: false },
+        {
+          where: { id: id },
+        }
+      );
     }
-    console.log("9999999999999999999999");
   } catch (error) {
     res.json({ error: error });
   }
