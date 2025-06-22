@@ -10,7 +10,7 @@ const { where } = require("sequelize");
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications["api-key"];
 apiKey.apiKey =
-  "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";
+  "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";
 
 // Step 2: Define controller function
 const getPassword = async (req, res) => {

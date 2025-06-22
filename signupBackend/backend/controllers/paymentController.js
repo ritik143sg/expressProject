@@ -51,17 +51,14 @@ const paymentStatus = async (req, res) => {
   try {
     const response = await getPaymentStatus(id);
     console.log(response);
-    const transaction = sequelize.transaction();
-    await Order.update(
-      { OrderStatus: response },
-      { where: { OrderId: id }, transaction }
-    );
+    //const transaction = sequelize.transaction();
+    await Order.update({ OrderStatus: response }, { where: { OrderId: id } });
 
     const updatedOrder = await Order.findOne({ where: { OrderId: id } });
-    (await transaction).commit();
+    // (await transaction).commit();
     res.json({ order: updatedOrder });
   } catch (err) {
-    transaction.rollback();
+    //transaction.rollback();
     console.error("Fetch payment error:", err);
   }
 };

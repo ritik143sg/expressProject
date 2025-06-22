@@ -109,6 +109,14 @@ async function inintialize() {
           leaderBoardButton.innerText = "Leader Board";
           leaderBoard.appendChild(leaderBoardButton);
 
+          const expenseDetailsButton = document.createElement("button");
+          expenseDetailsButton.innerText = "Expense Details";
+          leaderBoard.appendChild(expenseDetailsButton);
+
+          expenseDetailsButton.addEventListener("click", async () => {
+            window.location.href = "./view/dailyExpenses.html";
+          });
+
           leaderBoardButton.addEventListener("click", async () => {
             const expenses = await axios.get(
               "http://localhost:4000/premiumFeature",
