@@ -73,7 +73,7 @@ const initialize = async () => {
   try {
     const token = JSON.parse(localStorage.getItem("token"));
 
-    const result = await axios.get("http://localhost:4000/expense", {
+    const result = await axios.get(`http://localhost:4000/expense/${1}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

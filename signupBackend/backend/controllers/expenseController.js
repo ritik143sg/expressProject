@@ -39,23 +39,27 @@ const addExpense = async (req, res) => {
 const getAllExpense = async (req, res) => {
   const user = req.user;
   const pageId = req.params.id;
+  const rowLimit = Number(req.query.limit);
+
+  console.log(typeof req.query.limit);
+
   try {
     const expenses = await Expense.findAll({
       where: {
         UserId: user.id,
       },
-      limit: 3,
+      limit: rowLimit,
       order: [["createdAt", "DESC"]],
-      offset: (Number(pageId) - 1) * 3,
+      offset: (Number(pageId) - 1) * rowLimit,
     });
 
     const expenses1 = await Expense.findAll({
       where: {
         UserId: user.id,
       },
-      limit: 3,
+      limit: rowLimit,
       order: [["createdAt", "DESC"]],
-      offset: Number(pageId) * 3,
+      offset: Number(pageId) * rowLimit,
     });
 
     let pre = false;

@@ -56,6 +56,7 @@ const paginatingButton = (page) => {
   console.log(page);
   const body = document.querySelector("body");
   const leaderBoardList = document.getElementById("leaderBoard");
+
   const token = JSON.parse(localStorage.getItem("token"));
   const preButton = document.createElement("button");
   const currButton = document.createElement("button");
@@ -63,8 +64,11 @@ const paginatingButton = (page) => {
 
   if (page.pre === true) {
     preButton.addEventListener("click", async () => {
+      const limit = JSON.parse(localStorage.getItem("pageNo"));
       const expenses = await axios.get(
-        `http://localhost:4000/expense/${Number(page.pageId) - 1}`,
+        `http://localhost:4000/expense/${
+          Number(page.pageId) - 1
+        }?limit=${limit}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,8 +97,9 @@ const paginatingButton = (page) => {
     //const currButton = document.createElement("button");
 
     currButton.addEventListener("click", async () => {
+      const limit = JSON.parse(localStorage.getItem("pageNo"));
       const expenses = await axios.get(
-        `http://localhost:4000/expense/${Number(page.pageId)}`,
+        `http://localhost:4000/expense/${Number(page.pageId)}?limit=${limit}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -125,8 +130,11 @@ const paginatingButton = (page) => {
   if (page.next === true) {
     //const nextButton = document.createElement("button");
     nextButton.addEventListener("click", async () => {
+      const limit = JSON.parse(localStorage.getItem("pageNo"));
       const expenses = await axios.get(
-        `http://localhost:4000/expense/${Number(page.pageId) + 1}`,
+        `http://localhost:4000/expense/${
+          Number(page.pageId) + 1
+        }?limit=${limit}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -193,14 +201,44 @@ async function display(item) {
 }
 
 async function inintialize() {
+  const token = JSON.parse(localStorage.getItem("token"));
   const ul = document.querySelector("ul");
   ul.innerHTML = "";
+
+  const select = document.getElementById("pageNo");
+
+  localStorage.setItem("pageNo", JSON.stringify(select.value));
+
+  select.addEventListener("click", async () => {
+    console.log(select.value);
+    localStorage.setItem("pageNo", JSON.stringify(select.value));
+
+    ul.innerHTML = "";
+    const id = 1;
+
+    const limit = JSON.parse(localStorage.getItem("pageNo"));
+
+    const expenses = await axios.get(
+      `http://localhost:4000/expense/${id}/?limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(expenses);
+    const items = expenses.data.expense;
+
+    items.map((item) => {
+      display(item);
+    });
+    // paginatingButton(expenses.data.page);
+  });
 
   const premiumButton = document.getElementById("premium");
 
   try {
-    const token = JSON.parse(localStorage.getItem("token"));
-
     const result = await axios.get("http://localhost:4000/order", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -269,11 +307,16 @@ async function inintialize() {
 
     const id = 1;
 
-    const expenses = await axios.get(`http://localhost:4000/expense/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const limit = JSON.parse(localStorage.getItem("pageNo"));
+
+    const expenses = await axios.get(
+      `http://localhost:4000/expense/${id}/?limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     console.log(expenses);
     const items = expenses.data.expense;
