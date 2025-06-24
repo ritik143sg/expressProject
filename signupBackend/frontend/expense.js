@@ -27,6 +27,131 @@ const handleSubmit = async (event) => {
   event.target.description.value = "";
 };
 
+const style = (button) => {
+  button.style.backgroundColor = "#28a745"; // Bootstrap-style green
+  button.style.color = "white";
+  button.style.padding = "8px 16px";
+  button.style.margin = "5px";
+  button.style.borderRadius = "8px";
+  button.style.border = "none";
+  button.style.cursor = "pointer";
+  button.style.fontSize = "16px";
+  button.style.fontWeight = "bold";
+  button.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+  button.style.transition = "background-color 0.3s ease, transform 0.2s ease";
+
+  // Optional Hover Effect
+  button.addEventListener("mouseenter", () => {
+    button.style.backgroundColor = "#218838"; // Darker green on hover
+    button.style.transform = "scale(1.05)";
+  });
+
+  button.addEventListener("mouseleave", () => {
+    button.style.backgroundColor = "#28a745";
+    button.style.transform = "scale(1)";
+  });
+};
+
+const paginatingButton = (page) => {
+  console.log(page);
+  const body = document.querySelector("body");
+  const leaderBoardList = document.getElementById("leaderBoard");
+  const token = JSON.parse(localStorage.getItem("token"));
+  const preButton = document.createElement("button");
+  const currButton = document.createElement("button");
+  const nextButton = document.createElement("button");
+
+  if (page.pre === true) {
+    preButton.addEventListener("click", async () => {
+      const expenses = await axios.get(
+        `http://localhost:4000/expense/${Number(page.pageId) - 1}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const items = expenses.data.expense;
+      const ul = document.querySelector("ul");
+      ul.innerHTML = "";
+
+      items.map((item) => {
+        display(item);
+      });
+      currButton.remove();
+      nextButton.remove();
+      preButton.remove();
+      paginatingButton(expenses.data.page);
+    });
+
+    preButton.innerText = `${Number(page.pageId) - 1}`;
+    style(preButton);
+    body.insertBefore(preButton, leaderBoardList);
+  }
+
+  if (page.curr === true) {
+    //const currButton = document.createElement("button");
+
+    currButton.addEventListener("click", async () => {
+      const expenses = await axios.get(
+        `http://localhost:4000/expense/${Number(page.pageId)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const items = expenses.data.expense;
+      const ul = document.querySelector("ul");
+      ul.innerHTML = "";
+
+      items.map((item) => {
+        display(item);
+      });
+      currButton.remove();
+      nextButton.remove();
+      preButton.remove();
+      paginatingButton(expenses.data.page);
+    });
+
+    currButton.innerText = `${page.pageId}`;
+    style(currButton);
+
+    currButton.style.height = "50px";
+    //  currButton.style.backgroundColor = "pink";
+
+    body.insertBefore(currButton, leaderBoardList);
+  }
+  if (page.next === true) {
+    //const nextButton = document.createElement("button");
+    nextButton.addEventListener("click", async () => {
+      const expenses = await axios.get(
+        `http://localhost:4000/expense/${Number(page.pageId) + 1}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const items = expenses.data.expense;
+      const ul = document.querySelector("ul");
+      ul.innerHTML = "";
+
+      items.map((item) => {
+        display(item);
+      });
+      currButton.remove();
+      nextButton.remove();
+      preButton.remove();
+      paginatingButton(expenses.data.page);
+    });
+
+    nextButton.innerText = `${Number(page.pageId) + 1}`;
+    style(nextButton);
+    body.insertBefore(nextButton, leaderBoardList);
+  }
+};
+
 async function display2(item) {
   const leaderBoard = document.getElementById("leaderBoard");
   const ul = document.querySelector("#leaderBoardList");
@@ -142,7 +267,9 @@ async function inintialize() {
       }
     }
 
-    const expenses = await axios.get("http://localhost:4000/expense", {
+    const id = 1;
+
+    const expenses = await axios.get(`http://localhost:4000/expense/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -154,7 +281,12 @@ async function inintialize() {
     items.map((item) => {
       display(item);
     });
+    paginatingButton(expenses.data.page);
   } catch (error) {
+    // if (error && error.response.data.message === "Invalid token") {
+    //   alert("User Logged Out");
+    //   window.location.href = "./login.html";
+    // }
     console.log(error);
   }
 }

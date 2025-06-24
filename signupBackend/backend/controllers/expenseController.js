@@ -38,15 +38,46 @@ const addExpense = async (req, res) => {
 };
 const getAllExpense = async (req, res) => {
   const user = req.user;
-  //console.log(user);
+  const pageId = req.params.id;
   try {
     const expenses = await Expense.findAll({
       where: {
         UserId: user.id,
       },
+      limit: 3,
+      order: [["createdAt", "DESC"]],
+      offset: (Number(pageId) - 1) * 3,
     });
 
-    res.status(201).json({ msg: "expense retrive", expense: expenses });
+    const expenses1 = await Expense.findAll({
+      where: {
+        UserId: user.id,
+      },
+      limit: 3,
+      order: [["createdAt", "DESC"]],
+      offset: Number(pageId) * 3,
+    });
+
+    let pre = false;
+    let curr = false;
+    let next = false;
+
+    if (pageId != 1) {
+      pre = true;
+    }
+    if (expenses.length > 0) {
+      curr = true;
+    }
+
+    if (expenses1.length > 0) {
+      next = true;
+    }
+
+    res.status(201).json({
+      msg: "expense retrive",
+      expense: expenses,
+      page: { pre, curr, next, pageId },
+    });
   } catch (error) {
     res
       .status(500)

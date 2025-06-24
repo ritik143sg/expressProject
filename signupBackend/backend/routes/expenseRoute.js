@@ -9,7 +9,7 @@ const { authenticate } = require("../middleWare/authentication");
 const expenseRoute = express.Router();
 
 expenseRoute.post("/add", authenticate, addExpense);
-expenseRoute.get("/", authenticate, getAllExpense);
+expenseRoute.get("/:id", authenticate, getAllExpense);
 expenseRoute.delete("/delete/:id", authenticate, delExpense);
 
 module.exports = expenseRoute;
