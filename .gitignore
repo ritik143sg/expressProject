@@ -1,0 +1,31 @@
+# Environment variables
+.env
+
+# Node modules
+node_modules/
+
+# Log files
+logs/
+*.log
+
+# Dependency lock files (optional: ignore if you're not locking deps)
+package-lock.json
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# Build output (if any frontend or bundler used)
+dist/
+build/
+
+# PM2 process manager logs/PIDs (optional)
+*.pid
+pids/
+
+# Testing coverage reports
+coverage/
