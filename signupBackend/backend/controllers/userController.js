@@ -50,7 +50,11 @@ const logUser = async (req, res) => {
         res.status(401).json({ msg: "Wrong Password - User Not Authorised " });
       } else {
         const token = genTokent(checkUser);
-        res.status(201).json({ msg: "User login successful", token: token });
+        res.status(201).json({
+          msg: "User login successful",
+          token: token,
+          user: checkUser,
+        });
       }
     }
   } catch (error) {

@@ -31,19 +31,19 @@ if (!fs.existsSync(logsDir)) {
 }
 
 // Setup request logging using Morgan
-const accessLogStream = fs.createWriteStream(path.join(logsDir, "access.log"), {
-  flags: "a",
-});
+// const accessLogStream = fs.createWriteStream(path.join(logsDir, "access.log"), {
+//   flags: "a",
+// });
 
 // Middlewares
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(compression());
-app.use(morgan("combined", { stream: accessLogStream }));
-if (process.env.NODE_ENV !== "production") {
-  app.use(morgan("dev")); // console logging in development
-}
+// app.use(morgan("combined", { stream: accessLogStream }));
+// if (process.env.NODE_ENV !== "production") {
+//   app.use(morgan("dev")); // console logging in development
+// }
 
 // Routes
 app.use("/user", userRoute);

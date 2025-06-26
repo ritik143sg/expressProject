@@ -10,8 +10,11 @@ const handleSubmit = async (event) => {
     const res = await axios.post("http://localhost:4000/user/login", data);
 
     const token = res.data.token;
+    const userId = res.data.user.id;
+    console.log(res.data.user.id);
 
     localStorage.setItem("token", JSON.stringify(token));
+    localStorage.setItem("userId", JSON.stringify(userId));
 
     alert(res.data.msg);
     window.location.href = "./expense.html";

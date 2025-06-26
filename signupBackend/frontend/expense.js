@@ -4,7 +4,6 @@ const handleSubmit = async (event) => {
   const description = event.target.description.value;
   const category = event.target.category.value;
 
-  console.log(amount, description, category);
   const data = {
     amount: amount,
     description: description,
@@ -18,7 +17,7 @@ const handleSubmit = async (event) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(res);
+    // showItems();
     inintialize();
   } catch (error) {
     console.log(error);
@@ -26,6 +25,11 @@ const handleSubmit = async (event) => {
   event.target.amount.value = "";
   event.target.description.value = "";
 };
+
+// const showItems = () => {
+//   const body = document.querySelector("body");
+//   body.innerHTML = "";
+// };
 
 const style = (button) => {
   button.style.backgroundColor = "#28a745"; // Bootstrap-style green
@@ -326,10 +330,10 @@ async function inintialize() {
     });
     paginatingButton(expenses.data.page);
   } catch (error) {
-    // if (error && error.response.data.message === "Invalid token") {
-    //   alert("User Logged Out");
-    //   window.location.href = "./login.html";
-    // }
+    if (error && error.response.data.message === "Invalid token") {
+      alert("User Logged Out Invalid Token");
+      window.location.href = "./login.html";
+    }
     console.log(error);
   }
 }

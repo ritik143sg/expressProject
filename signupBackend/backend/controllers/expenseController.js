@@ -89,6 +89,29 @@ const getAllExpense = async (req, res) => {
   }
 };
 
+const getLeaderBoardExpense = async (req, res) => {
+  const user = req.user;
+  const pageId = req.params.id;
+
+  try {
+    const expenses = await Expense.findAll({
+      where: {
+        UserId: user.id,
+      },
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(201).json({
+      msg: "expense retrive",
+      expense: expenses,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ msg: "expense getting failed", error: error.message });
+  }
+};
+
 const delExpense = async (req, res) => {
   const data = req.user;
   const transaction = await sequelize.transaction();
@@ -124,4 +147,9 @@ const delExpense = async (req, res) => {
   }
 };
 
-module.exports = { addExpense, getAllExpense, delExpense };
+module.exports = {
+  addExpense,
+  getAllExpense,
+  delExpense,
+  getLeaderBoardExpense,
+};

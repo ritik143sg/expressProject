@@ -72,12 +72,16 @@ const display = (item) => {
 const initialize = async () => {
   try {
     const token = JSON.parse(localStorage.getItem("token"));
+    const userId = JSON.parse(localStorage.getItem("userId"));
 
-    const result = await axios.get(`http://localhost:4000/expense/${1}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const result = await axios.get(
+      `http://localhost:4000/expense/get/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     const items = result.data.expense;
 
